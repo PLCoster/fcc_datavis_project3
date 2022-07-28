@@ -9,3 +9,8 @@ $body-color: grey;
 body {
   color: $body-color;
 }
+
+.cell:hover {
+  stroke: white;
+  stroke-width: 1px;
+}
