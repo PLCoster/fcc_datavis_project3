@@ -14,9 +14,7 @@ export default function Navbar() {
       <li key={title}>
         <a
           className="dropdown-item"
-          href={`https://plcoster.github.io/fcc_frontendlibs_project${
-            index + 1
-          }/`}
+          href={`https://plcoster.github.io/fcc_datavis_project${index + 1}/`}
         >
           {title}
         </a>
