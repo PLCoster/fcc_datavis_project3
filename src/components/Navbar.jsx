@@ -1,5 +1,8 @@
 import React from 'react';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+
 export default function Navbar() {
   const navLinkTitles = [
     'Bar Chart',
@@ -77,12 +80,12 @@ export default function Navbar() {
             </li>
             <li className="nav-item">
               <a className="nav-link" href="https://github.com/PLCoster">
-                <i className="fa-brands fa-github"></i> Github
+                <FontAwesomeIcon icon={faGithub} /> Github
               </a>
             </li>
             <li className="nav-item">
               <a className="nav-link" href="https://linkedin.com/in/plcoster">
-                <i className="fa-brands fa-linkedin"></i> LinkedIn
+                <FontAwesomeIcon icon={faLinkedin} /> LinkedIn
               </a>
             </li>
           </ul>
