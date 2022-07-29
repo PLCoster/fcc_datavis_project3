@@ -36,27 +36,28 @@ function handleMouseOver(e, cellData, baseTemp) {
     .attr('data-variance', cellData.variance)
     .style('visibility', 'visible')
     .style('top', `${e.layerY - 20}px`)
+    .style('left', `${cellData.year < 1884 ? e.layerX + 40 : e.layerX - 300}px`)
     .style(
-      'left',
-      `${cellData.year < 1884 ? e.layerX + 40 : e.layerX - 300}px`,
+      'background-color',
+      `${e.target.getAttribute('fill').slice(0, -1)}, 0.8)`,
     );
 
   tooltip
-    .append('h4')
-    .text(`${monthNumToMonthStr[cellData.month]} ${cellData.year}`);
+    .append('h5')
+    .text(`${monthNumToMonthStr[cellData.month - 1]} ${cellData.year}`);
 
   tooltip
-    .append('h5')
+    .append('h6')
     .text(
-      `Average Temperature: ${
+      `Monthly Temperature: ${
         Math.round((cellData.variance + baseTemp) * 100) / 100
       }°C`,
     );
 
   tooltip
-    .append('h5')
+    .append('h6')
     .text(
-      `Difference from Base Temp: ${Math.round(cellData.variance * 100) / 100}`,
+      `Variation from Average: ${Math.round(cellData.variance * 100) / 100}°C`,
     );
 }
 
