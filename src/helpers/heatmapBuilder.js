@@ -104,7 +104,7 @@ export default function heatmapBuilder(
 
   const zscale = d3
     .scaleSequential()
-    .domain([zMax, zMin])
+    .domain([Math.ceil(zMax), Math.floor(zMin)])
     .interpolator(d3.interpolateRdYlBu);
 
   // Add data cells to the HeatMap
@@ -163,40 +163,56 @@ export default function heatmapBuilder(
   // Create color legend for z-axis
   const zLegendScale = d3
     .scaleLinear()
-    .domain([1, 10])
-    .range([padding.left, padding.left + 400]);
+    .domain([Math.floor(zMin), Math.ceil(zMax)])
+    .range([padding.left, padding.left + 400])
+    .nice();
 
   const zLegendAxis = d3.axisBottom(zLegendScale);
 
-  console.log(
-    'Made it here!',
-    Array(100)
-      .fill()
-      .map((el, index) => zMin + (index / 100) * (zMax - zMin)),
-  );
+  const zLegend = graphSVG.append('g');
 
-  // const zLegend = graphSVG.append('')
-
-  graphSVG
+  zLegend
     .selectAll('rect')
     .data(
       Array(100)
         .fill()
-        .map((el, index) => zMin + (index / 100) * (zMax - zMin)),
+        .map(
+          (el, index) =>
+            Math.floor(zMin) +
+            (index / 100) * (Math.ceil(zMax) - Math.floor(zMin)),
+        ),
     )
     .enter()
     .append('rect')
     .attr('x', (d) => zLegendScale(d))
-    .attr('y', height - 40)
+    .attr('y', height - 80)
     .attr('width', (zLegendScale(zMax) - zLegendScale(zMin)) / 100)
     .attr('height', 40)
     .attr('fill', (d) => zscale(d));
 
-  graphSVG
+  zLegend
     .append('g')
     .style('font-size', '14px')
     .attr('transform', `translate(0, ${height - 40})`)
     .call(zLegendAxis);
+
+  // Add axis labels
+  graphSVG
+    .append('text')
+    .attr('transform', 'rotate(-90)')
+    .text('Month')
+    .attr('x', -yscale(5))
+    .attr('y', 30)
+    .style('font-size', `${Math.max(Math.round(0.015 * width), 15)}px`)
+    .style('font-weight', 600);
+
+  graphSVG
+    .append('text')
+    .style('font-size', `${Math.max(Math.round(0.015 * width), 15)}px`)
+    .text('Year')
+    .attr('x', xscale((xMax + xMin) / 2))
+    .attr('y', height + 40 - padding.bottom)
+    .style('font-weight', 600);
 
   console.log('BUILT WHOLE GRAPH!!');
 }
