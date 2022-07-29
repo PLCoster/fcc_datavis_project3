@@ -58,7 +58,11 @@ export default function HeatMapContainer() {
   return (
     <main className="container-md" ref={containerRef}>
       <p>{plotWidth}</p>
-      <HeatMap plotData={plotData} plotWidth={plotWidth} />
+      <HeatMap
+        plotData={plotData}
+        plotWidth={plotWidth}
+        parentSelector="#graph-container"
+      />
     </main>
   );
 }

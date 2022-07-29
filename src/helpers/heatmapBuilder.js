@@ -69,17 +69,20 @@ function handleMouseOut() {
 export default function heatmapBuilder(
   { baseTemperature: baseTemp, monthlyVariance: monthlyData },
   plotContainerWidth,
+  parentSelector,
 ) {
   const [getDataYear, getDataMonth, getDataVariance, getDataTemp] =
     setUpGetters(baseTemp);
 
-  const plotDiv = d3.select('body');
+  const plotDiv = d3.select(parentSelector);
 
-  plotDiv.html('D3 is controlling this now!');
+  console.log('PLOT DIV IS: ', plotDiv);
 
-  const width = Math.max(1200, plotContainerWidth);
+  plotDiv.html('');
+
+  const width = Math.max(696, plotContainerWidth);
   const height = 0.6 * width;
-  const padding = { left: 80, bottom: 200, top: 40, right: 40 };
+  const padding = { left: 80, bottom: 140, top: 40, right: 40 };
 
   const graphSVG = plotDiv
     .append('svg')
@@ -129,17 +132,17 @@ export default function heatmapBuilder(
     .on('mouseout', handleMouseOut);
 
   // Add tooltip element
-  const tooltip = plotDiv
+  plotDiv
     .append('div')
     .style('position', 'absolute')
     .style('visibility', 'hidden')
     .attr('id', 'tooltip');
 
-  // Add axes to the chart
+  // == Add Axes to the Chart ==
   const xAxis = d3
     .axisBottom(xscale)
     .tickFormat((year) => year.toString())
-    .ticks(20);
+    .ticks(10);
 
   graphSVG
     .append('g')
@@ -169,7 +172,7 @@ export default function heatmapBuilder(
 
   const zLegendAxis = d3.axisBottom(zLegendScale);
 
-  const zLegend = graphSVG.append('g');
+  const zLegend = graphSVG.append('g').attr('id', 'legend');
 
   zLegend
     .selectAll('rect')
@@ -185,15 +188,15 @@ export default function heatmapBuilder(
     .enter()
     .append('rect')
     .attr('x', (d) => zLegendScale(d))
-    .attr('y', height - 80)
+    .attr('y', height - 90)
     .attr('width', (zLegendScale(zMax) - zLegendScale(zMin)) / 100)
-    .attr('height', 40)
+    .attr('height', 30)
     .attr('fill', (d) => zscale(d));
 
   zLegend
     .append('g')
     .style('font-size', '14px')
-    .attr('transform', `translate(0, ${height - 40})`)
+    .attr('transform', `translate(0, ${height - 60})`)
     .call(zLegendAxis);
 
   // Add axis labels
@@ -201,7 +204,7 @@ export default function heatmapBuilder(
     .append('text')
     .attr('transform', 'rotate(-90)')
     .text('Month')
-    .attr('x', -yscale(5))
+    .attr('x', -yscale(4.5))
     .attr('y', 30)
     .style('font-size', `${Math.max(Math.round(0.015 * width), 15)}px`)
     .style('font-weight', 600);
@@ -214,5 +217,15 @@ export default function heatmapBuilder(
     .attr('y', height + 40 - padding.bottom)
     .style('font-weight', 600);
 
+  graphSVG
+    .append('text')
+    .style('font-size', `${Math.max(Math.round(0.015 * width), 15)}px`)
+    .text('Temperature (°C)')
+    .attr('x', zLegendScale(5.5))
+    .attr('y', height - 20)
+    .style('font-weight', 600);
+
   console.log('BUILT WHOLE GRAPH!!');
+
+  return plotDiv;
 }
