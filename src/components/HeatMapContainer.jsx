@@ -18,7 +18,6 @@ export default function HeatMapContainer() {
         'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/global-temperature.json',
       )
       .then((response) => {
-        console.log(response);
         setPlotData(response.data);
       })
       .catch((err) => {
@@ -32,37 +31,25 @@ export default function HeatMapContainer() {
   useEffect(() => {
     const handleWindowResize = () => {
       setPlotWidth(containerRef.current.clientWidth);
-      console.log(
-        'resized plot width to: ',
-        containerRef.current.clientWidth,
-        containerRef.current.offsetWidth,
-        containerRef,
-      );
     };
-    console.log('LayoutEffect Triggered!');
-    // handleWindowResize();
+    handleWindowResize();
     window.addEventListener('resize', handleWindowResize);
     return () => {
       window.removeEventListener('resize', handleWindowResize);
     };
   }, []);
 
-  if (!plotData) {
-    return (
-      <main className="container-md">
-        <h3>Loading plot data...</h3>
-      </main>
-    );
-  }
-
   return (
     <main className="container-md" ref={containerRef}>
-      <p>{plotWidth}</p>
-      <HeatMap
-        plotData={plotData}
-        plotWidth={plotWidth}
-        parentSelector="#graph-container"
-      />
+      {plotData ? (
+        <HeatMap
+          plotData={plotData}
+          plotWidth={plotWidth}
+          parentSelector="#graph-container"
+        />
+      ) : (
+        <h3>Loading plot data...</h3>
+      )}
     </main>
   );
 }
