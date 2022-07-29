@@ -9,6 +9,8 @@ export default function HeatMapContainer() {
   const [plotData, setPlotData] = useState(null);
   const [plotWidth, setPlotWidth] = useState(0);
 
+  const [graphOpacity, setGraphOpacity] = useState(0);
+
   const containerRef = useRef(null);
 
   // Load the dataset when the component mounts
@@ -40,12 +42,17 @@ export default function HeatMapContainer() {
   }, []);
 
   return (
-    <main className="container-md" ref={containerRef}>
+    <main
+      className="container-md"
+      ref={containerRef}
+      style={{ opacity: graphOpacity }}
+    >
       {plotData ? (
         <HeatMap
           plotData={plotData}
           plotWidth={plotWidth}
           parentSelector="#graph-container"
+          setGraphOpacity={setGraphOpacity}
         />
       ) : (
         <h3>Loading plot data...</h3>
