@@ -1,15 +1,38 @@
 @import 'bootstrap';
 
-.hello {
-  color: red;
-}
+/* == CUSTOM STYLES ==*/
 
-$body-color: grey;
-
+/* OVERALL STYLES */
 body {
-  color: $body-color;
+  background-color: #eff8f3;
+  min-height: 100vh;
 }
 
+/* NAVBAR */
+.navbar {
+  background-image: linear-gradient(to right, #b9dfec, #fdf3b1, #fcad65);
+  .navbar-brand {
+    margin-left: 40px;
+  }
+}
+
+/* MAIN */
+main {
+  margin: 3vh 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  #title {
+    font-size: 2rem;
+  }
+
+  #description {
+    font-size: 1.5rem;
+  }
+}
+
+/* GRAPH PLOT */
 .cell:hover {
   stroke: black;
   stroke-width: 1px;
