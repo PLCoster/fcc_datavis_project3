@@ -1,23 +1,24 @@
 import * as d3 from 'd3';
 
+// Months need to be 0-indexed to pass FCC test suite
 const monthNumToMonthStr = {
-  1: 'January',
-  2: 'February',
-  3: 'March',
-  4: 'April',
-  5: 'May',
-  6: 'June',
-  7: 'July',
-  8: 'August',
-  9: 'September',
-  10: 'October',
-  11: 'November',
-  12: 'December',
+  0: 'January',
+  1: 'February',
+  2: 'March',
+  3: 'April',
+  4: 'May',
+  5: 'June',
+  6: 'July',
+  7: 'August',
+  8: 'September',
+  9: 'October',
+  10: 'November',
+  11: 'December',
 };
 
-function setUpGetters(baseTemp) {
+function setUpDataGetters(baseTemp) {
   const getDataYear = (tempObj) => tempObj.year;
-  const getDataMonth = (tempObj) => tempObj.month;
+  const getDataMonth = (tempObj) => tempObj.month - 1;
   const getDataVariance = (tempObj) => tempObj.variance;
   const getDataTemp = (tempObj) => tempObj.variance + baseTemp;
   return [getDataYear, getDataMonth, getDataVariance, getDataTemp];
@@ -30,7 +31,7 @@ function handleMouseOver(e, cellData, baseTemp) {
   tooltip
     .html('')
     .attr('data-year', cellData.year)
-    .attr('data-month', cellData.month)
+    .attr('data-month', cellData.month - 1)
     .attr('data-temp', cellData.variance + baseTemp)
     .attr('data-variance', cellData.variance)
     .style('visibility', 'visible')
@@ -65,13 +66,14 @@ function handleMouseOut() {
   tooltip.style('visibility', 'hidden');
 }
 
+// Main function to build the HeatMap SVG using D3
 export default function heatmapBuilder(
   { baseTemperature: baseTemp, monthlyVariance: monthlyData },
   plotContainerWidth,
   parentSelector,
 ) {
   const [getDataYear, getDataMonth, getDataVariance, getDataTemp] =
-    setUpGetters(baseTemp);
+    setUpDataGetters(baseTemp);
 
   const plotDiv = d3.select(parentSelector);
 
@@ -135,7 +137,7 @@ export default function heatmapBuilder(
     .style('visibility', 'hidden')
     .attr('id', 'tooltip');
 
-  // == Add Axes to the Chart ==
+  // Add axes to the chart
   const xAxis = d3
     .axisBottom(xscale)
     .tickFormat((year) => year.toString())
@@ -144,13 +146,17 @@ export default function heatmapBuilder(
   graphSVG
     .append('g')
     .style('font-size', '14px')
-    .attr('transform', `translate(0, ${yscale(0)})`)
+    .attr('transform', `translate(0, ${yscale(yMin - 1)})`)
     .attr('id', 'x-axis')
     .call(xAxis);
 
   const yAxis = d3
     .axisLeft(yscale)
-    .tickValues([0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5])
+    .tickValues(
+      Array(12)
+        .fill()
+        .map((el, i) => yMin - 0.5 + i),
+    )
     .tickFormat((monthNum) => monthNumToMonthStr[parseInt(monthNum + 0.5)]);
 
   graphSVG
@@ -171,6 +177,7 @@ export default function heatmapBuilder(
 
   const zLegend = graphSVG.append('g').attr('id', 'legend');
 
+  // Create 100 rect elements spanning full temperature range
   zLegend
     .selectAll('rect')
     .data(
@@ -201,7 +208,7 @@ export default function heatmapBuilder(
     .append('text')
     .attr('transform', 'rotate(-90)')
     .text('Month')
-    .attr('x', -yscale(4.5))
+    .attr('x', -yscale(3.5))
     .attr('y', 30)
     .style('font-size', `${Math.max(Math.round(0.015 * width), 15)}px`)
     .style('font-weight', 600);
@@ -221,6 +228,4 @@ export default function heatmapBuilder(
     .attr('x', zLegendScale(5.5))
     .attr('y', height - 20)
     .style('font-weight', 600);
-
-  return plotDiv;
 }
