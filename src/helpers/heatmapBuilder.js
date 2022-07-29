@@ -78,8 +78,8 @@ export default function heatmapBuilder(
   plotDiv.html('D3 is controlling this now!');
 
   const width = Math.max(1200, plotContainerWidth);
-  const height = 0.5 * width;
-  const padding = 80;
+  const height = 0.6 * width;
+  const padding = { left: 80, bottom: 200, top: 40, right: 40 };
 
   const graphSVG = plotDiv
     .append('svg')
@@ -95,12 +95,17 @@ export default function heatmapBuilder(
   const xscale = d3
     .scaleLinear()
     .domain([xMin, xMax])
-    .range([padding, width - padding]);
+    .range([padding.left, width - padding.right]);
 
   const yscale = d3
     .scaleLinear()
-    .domain([yMin, yMax])
-    .range([height - padding, padding]);
+    .domain([yMin - 1, yMax])
+    .range([height - padding.bottom, padding.top]);
+
+  const zscale = d3
+    .scaleSequential()
+    .domain([zMax, zMin])
+    .interpolator(d3.interpolateRdYlBu);
 
   // Add data cells to the HeatMap
   graphSVG
@@ -117,15 +122,81 @@ export default function heatmapBuilder(
     .attr('y', (d) => yscale(getDataMonth(d)))
     .attr('width', xscale(xMin + 1) - xscale(xMin))
     .attr('height', yscale(yMin) - yscale(yMin + 1))
-    .style('fill', 'blue')
+    .attr('fill', (d) => zscale(getDataTemp(d)))
     .on('mouseover', function (e, d) {
       handleMouseOver.call(this, e, d, baseTemp);
     })
     .on('mouseout', handleMouseOut);
 
+  // Add tooltip element
   const tooltip = plotDiv
     .append('div')
     .style('position', 'absolute')
     .style('visibility', 'hidden')
     .attr('id', 'tooltip');
+
+  // Add axes to the chart
+  const xAxis = d3
+    .axisBottom(xscale)
+    .tickFormat((year) => year.toString())
+    .ticks(20);
+
+  graphSVG
+    .append('g')
+    .style('font-size', '14px')
+    .attr('transform', `translate(0, ${yscale(0)})`)
+    .attr('id', 'x-axis')
+    .call(xAxis);
+
+  const yAxis = d3
+    .axisLeft(yscale)
+    .tickValues([0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5])
+    .tickFormat((monthNum) => monthNumToMonthStr[parseInt(monthNum + 0.5)]);
+
+  graphSVG
+    .append('g')
+    .style('font-size', '14px')
+    .attr('transform', `translate(${padding.left}, 0)`)
+    .attr('id', 'y-axis')
+    .call(yAxis);
+
+  // Create color legend for z-axis
+  const zLegendScale = d3
+    .scaleLinear()
+    .domain([1, 10])
+    .range([padding.left, padding.left + 400]);
+
+  const zLegendAxis = d3.axisBottom(zLegendScale);
+
+  console.log(
+    'Made it here!',
+    Array(100)
+      .fill()
+      .map((el, index) => zMin + (index / 100) * (zMax - zMin)),
+  );
+
+  // const zLegend = graphSVG.append('')
+
+  graphSVG
+    .selectAll('rect')
+    .data(
+      Array(100)
+        .fill()
+        .map((el, index) => zMin + (index / 100) * (zMax - zMin)),
+    )
+    .enter()
+    .append('rect')
+    .attr('x', (d) => zLegendScale(d))
+    .attr('y', height - 40)
+    .attr('width', (zLegendScale(zMax) - zLegendScale(zMin)) / 100)
+    .attr('height', 40)
+    .attr('fill', (d) => zscale(d));
+
+  graphSVG
+    .append('g')
+    .style('font-size', '14px')
+    .attr('transform', `translate(0, ${height - 40})`)
+    .call(zLegendAxis);
+
+  console.log('BUILT WHOLE GRAPH!!');
 }
