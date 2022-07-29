@@ -21,9 +21,16 @@ export default function HeatMap({ plotData, plotWidth, parentSelector }) {
         Monthly Global Land Temperature 1753-2015
       </h1>
       <h3 id="description" className="display-6">
-        Variance from Average Temperature (8.66℃)
+        Variance from Average Monthly Temperature (8.66℃)
       </h3>
       <div id="graph-container" />
+      <hr></hr>
+      <p>
+        The plot above shows the average global land temperature each month from
+        1753 to 2015. Each monthly temperature is compared against the average
+        monthly temperature across this period (8.66℃). This graph shows clearly
+        a trend of increasing land temperature in recent years.
+      </p>
     </>
   );
 }

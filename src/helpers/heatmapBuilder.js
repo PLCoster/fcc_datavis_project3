@@ -61,7 +61,6 @@ function handleMouseOver(e, cellData, baseTemp) {
 
 // Hide the tooltip as mouse leaves cell
 function handleMouseOut() {
-  console.log('MOUSE OUT');
   const tooltip = d3.select('#tooltip');
   tooltip.style('visibility', 'hidden');
 }
@@ -76,13 +75,11 @@ export default function heatmapBuilder(
 
   const plotDiv = d3.select(parentSelector);
 
-  console.log('PLOT DIV IS: ', plotDiv);
-
   plotDiv.html('');
 
   const width = Math.max(696, plotContainerWidth);
   const height = 0.6 * width;
-  const padding = { left: 80, bottom: 140, top: 40, right: 40 };
+  const padding = { left: 80, bottom: 140, top: 0, right: 40 };
 
   const graphSVG = plotDiv
     .append('svg')
@@ -224,8 +221,6 @@ export default function heatmapBuilder(
     .attr('x', zLegendScale(5.5))
     .attr('y', height - 20)
     .style('font-weight', 600);
-
-  console.log('BUILT WHOLE GRAPH!!');
 
   return plotDiv;
 }
