@@ -6,11 +6,12 @@ module.exports = {
   entry: path.join(__dirname, 'src/index.jsx'),
   devtool: 'inline-source-map',
   devServer: {
-    static: './dist',
+    static: './src/assets', // Where to look for any static assets in dev server
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'src/index.html'),
+      favicon: path.join(__dirname, 'src/assets/favicon.ico'),
     }),
   ],
   output: {
