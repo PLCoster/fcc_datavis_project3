@@ -84,7 +84,7 @@ export default function heatmapBuilder(
   plotDiv.html('');
 
   const width = Math.max(696, plotContainerWidth);
-  const height = 0.6 * width;
+  const height = Math.min(0.6 * width, 680);
   const padding = { left: 80, bottom: 140, top: 0, right: 40 };
 
   const graphSVG = plotDiv

@@ -31,7 +31,6 @@ export default function HeatMap({
         Variance from Average Monthly Temperature 1951 - 1980 (8.66℃)
       </h3>
       <div id="graph-container" />
-      <hr></hr>
       <p>
         The plot above shows the average global land temperature each month from
         1753 to 2015. Each monthly temperature is compared against the average
