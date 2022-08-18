@@ -42,21 +42,23 @@ export default function HeatMapContainer() {
   }, []);
 
   return (
-    <main
-      className="container-md"
-      ref={containerRef}
-      style={{ opacity: graphOpacity }}
-    >
-      {plotData ? (
-        <HeatMap
-          plotData={plotData}
-          plotWidth={plotWidth}
-          parentSelector="#graph-container"
-          setGraphOpacity={setGraphOpacity}
-        />
-      ) : (
-        <h3>Loading plot data...</h3>
-      )}
-    </main>
+    <div className="container-fluid">
+      <main
+        className="container-md"
+        ref={containerRef}
+        style={{ opacity: graphOpacity }}
+      >
+        {plotData ? (
+          <HeatMap
+            plotData={plotData}
+            plotWidth={plotWidth}
+            parentSelector="#graph-container"
+            setGraphOpacity={setGraphOpacity}
+          />
+        ) : (
+          <h3>Loading plot data...</h3>
+        )}
+      </main>
+    </div>
   );
 }

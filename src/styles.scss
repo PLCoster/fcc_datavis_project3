@@ -17,9 +17,9 @@ body {
 }
 
 /* MAIN */
-main {
-  margin: 2vh 0;
-  min-width: 720px;
+main.container-md {
+  margin: 2vh auto;
+  padding: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -35,6 +35,11 @@ main {
 }
 
 /* GRAPH PLOT */
+#graph-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
 .cell:hover {
   stroke: black;
   stroke-width: 1px;
