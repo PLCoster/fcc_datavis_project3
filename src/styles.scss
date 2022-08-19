@@ -50,4 +50,12 @@ main.container-md {
   border-radius: 5px;
   transition: background-color 1s;
   box-shadow: 0 0 5px black;
+
+  h5 {
+    font-size: 1rem;
+  }
+
+  h6 {
+    font-size: 0.8rem;
+  }
 }

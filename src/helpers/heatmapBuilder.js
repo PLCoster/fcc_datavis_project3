@@ -27,6 +27,7 @@ function setUpDataGetters(baseTemp) {
 // Reveals, updates and positions the tooltip on plot cell mouseover
 function handleMouseOver(e, cellData, baseTemp) {
   const tooltip = d3.select('#tooltip');
+  const screenWidth = d3.select('body').node().getBoundingClientRect().width;
 
   tooltip
     .html('')
@@ -36,7 +37,10 @@ function handleMouseOver(e, cellData, baseTemp) {
     .attr('data-variance', cellData.variance)
     .style('visibility', 'visible')
     .style('top', `${e.pageY - 100}px`)
-    .style('left', `${cellData.year < 1884 ? e.pageX + 20 : e.pageX - 250}px`)
+    .style(
+      'left',
+      `${e.clientX < screenWidth / 2 ? e.pageX + 20 : e.pageX - 220}px`,
+    )
     .style(
       'background-color',
       `${e.target.getAttribute('fill').slice(0, -1)}, 0.8)`,
