@@ -35,11 +35,8 @@ function handleMouseOver(e, cellData, baseTemp) {
     .attr('data-temp', cellData.variance + baseTemp)
     .attr('data-variance', cellData.variance)
     .style('visibility', 'visible')
-    .style('top', `${e.clientY - 100}px`)
-    .style(
-      'left',
-      `${cellData.year < 1884 ? e.clientX + 20 : e.clientX - 250}px`,
-    )
+    .style('top', `${e.pageY - 100}px`)
+    .style('left', `${cellData.year < 1884 ? e.pageX + 20 : e.pageX - 250}px`)
     .style(
       'background-color',
       `${e.target.getAttribute('fill').slice(0, -1)}, 0.8)`,
